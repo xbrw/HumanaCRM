@@ -1,0 +1,184 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Equipamentos {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  nome      String?
+  status    String?
+  updatedAt DateTime @updatedAt
+}
+
+model Receitas {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+}
+
+model Despesas {
+  categoria String?
+  createdAt DateTime  @default(now())
+  data      DateTime?
+  id        String    @id @default(cuid())
+  nome      String?
+  updatedAt DateTime  @updatedAt
+  valor     Float?
+}
+
+model Pacientes {
+  agendamentos              Agendamento[]
+  consultas                 Consulta[]
+  consultasItems            Consultas[]
+  createdAt                 DateTime               @default(now())
+  email                     String?
+  endereO                   String?
+  histRicoMDico             String?
+  id                        String                 @id @default(cuid())
+  nome                      String?
+  prontuRiosEletrNicosItems ProntuRiosEletrNicos[]
+  telefone                  String?
+  updatedAt                 DateTime               @updatedAt
+}
+
+model Materiais {
+  createdAt  DateTime @default(now())
+  id         String   @id @default(cuid())
+  nome       String?
+  quantidade Int?
+  updatedAt  DateTime @updatedAt
+}
+
+model ComunicaO {
+  createdAt   DateTime  @default(now())
+  dataDeEnvio DateTime?
+  destinatRio String?
+  id          String    @id @default(cuid())
+  mensagem    String?
+  tipo        String?
+  updatedAt   DateTime  @updatedAt
+}
+
+model Consultas {
+  createdAt        DateTime      @default(now())
+  data             DateTime?
+  diagnStico       String?
+  id               String        @id @default(cuid())
+  paciente         Pacientes?    @relation(fields: [pacienteId], references: [id])
+  pacienteId       String?
+  tratamentosItems Tratamentos[]
+  updatedAt        DateTime      @updatedAt
+}
+
+model CampanhasDeMarketing {
+  createdAt DateTime  @default(now())
+  fim       DateTime?
+  id        String    @id @default(cuid())
+  inCio     DateTime?
+  nome      String?
+  updatedAt DateTime  @updatedAt
+}
+
+model Tratamentos {
+  consulta   Consultas? @relation(fields: [consultaId], references: [id])
+  consultaId String?
+  createdAt  DateTime   @default(now())
+  descriO    String?
+  id         String     @id @default(cuid())
+  nome       String?
+  updatedAt  DateTime   @updatedAt
+}
+
+model Leads {
+  createdAt DateTime @default(now())
+  email     String?
+  id        String   @id @default(cuid())
+  nome      String?
+  status    String?
+  updatedAt DateTime @updatedAt
+}
+
+model Agendamento {
+  createdAt  DateTime   @default(now())
+  data       DateTime?
+  id         String     @id @default(cuid())
+  paciente   Pacientes? @relation(fields: [pacienteId], references: [id])
+  pacienteId String?
+  sala       Salas?     @relation(fields: [salaId], references: [id])
+  salaId     String?
+  updatedAt  DateTime   @updatedAt
+}
+
+model Salas {
+  agendamentos Agendamento[]
+  capacidade   Int?
+  createdAt    DateTime      @default(now())
+  id           String        @id @default(cuid())
+  nome         String?
+  updatedAt    DateTime      @updatedAt
+}
+
+model AnotaEs {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+}
+
+model ProntuRiosEletrNicos {
+  createdAt       DateTime   @default(now())
+  dadosClNicos    String?
+  dataDeAtualizaO DateTime?
+  id              String     @id @default(cuid())
+  paciente        Pacientes? @relation(fields: [pacienteId], references: [id])
+  pacienteId      String?
+  updatedAt       DateTime   @updatedAt
+}
+
+model Paciente {
+  contato   String?
+  createdAt DateTime            @default(now())
+  genero    EnumPacienteGenero?
+  id        String              @id @default(cuid())
+  idade     Int?
+  nome      String?
+  updatedAt DateTime            @updatedAt
+}
+
+model Consulta {
+  createdAt   DateTime   @default(now())
+  dataHora    DateTime?
+  id          String     @id @default(cuid())
+  observacoes String?
+  paciente    Pacientes? @relation(fields: [pacienteId], references: [id])
+  pacienteId  String?
+  updatedAt   DateTime   @updatedAt
+}
+
+model ProntuRio {
+  createdAt    DateTime  @default(now())
+  data         DateTime?
+  diagnostico  String?
+  id           String    @id @default(cuid())
+  medicamentos String?
+  tratamento   String?
+  updatedAt    DateTime  @updatedAt
+}
+
+model MDico {
+  contato       String?
+  createdAt     DateTime @default(now())
+  crm           String?
+  especialidade String?
+  id            String   @id @default(cuid())
+  nome          String?
+  updatedAt     DateTime @updatedAt
+}
+
+enum EnumPacienteGenero {
+  Option1
+}
